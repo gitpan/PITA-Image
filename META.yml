@@ -1,0 +1,23 @@
+abstract: PITA Image Startup and Task Manager
+author: 'Adam Kennedy <cpan@ali.as>, L<http://ali.as/>'
+build_requires:
+  Test::More: 0.47
+distribution_type: module
+generated_by: Module::Install version 0.52
+license: perl
+name: PITA-Image
+no_index:
+  directory:
+    - inc
+    - t
+requires:
+  Carp: 0
+  Config::Tiny: 2.00
+  File::Spec: 0.80
+  File::Which: 0
+  LWP: 5.69
+  PITA::Scheme: 0.09
+  Params::Util: 0.07
+  URI: 0
+  perl: 5.005
+version: 0.01
