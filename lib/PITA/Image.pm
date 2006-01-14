@@ -6,7 +6,7 @@ use PITA::Image::Manager;
 
 use vars qw{$VERSION};
 BEGIN {
-	$VERSION = '0.01';
+	$VERSION = '0.10';
 }
 
 1;

@@ -1,4 +1,8 @@
 Revision history for Perl distribution PITA-Image
 
+0.10 Sun 15 Jan 2006
+	- Incrementing, updating dependencies and doing a version-syncronized
+	  release with PITA::XML 0.10 and PITA::Scheme 0.10
+
 0.01 Mon  8 Jan 2006
 	- First implementation

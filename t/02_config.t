@@ -145,8 +145,8 @@ isa_ok( ($manager->tasks)[0], 'PITA::Scheme' );
 ok( $manager->run, '->run returns ok' );
 is( scalar($manager->tasks), 1, 'Got one task' );
 isa_ok( ($manager->tasks)[0], 'PITA::Scheme' );
-isa_ok( ($manager->tasks)[0]->report, 'PITA::Report' );
-isa_ok( ($manager->tasks)[0]->install, 'PITA::Report::Install' );
+isa_ok( ($manager->tasks)[0]->report,  'PITA::XML::Report'  );
+isa_ok( ($manager->tasks)[0]->install, 'PITA::XML::Install' );
 is( scalar(($manager->tasks)[0]->install->commands), 3,
 	'Created all three commands as expected' );
 

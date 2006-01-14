@@ -4,7 +4,7 @@ package PITA::Image::Manager;
 
 =head1 NAME
 
-PITA::Scheme - PITA Guest Manager for inside system images
+PITA::Image::Manager - PITA Guest Manager for inside system images
 
 =head1 SYNOPSIS
 
@@ -14,6 +14,7 @@ A typical startup script
   
   use strict;
   use IPC::Run3;
+  use PITA::Image::Manager;
   
   # Wrap the main actions in an eval to catch errors
   eval {
@@ -39,14 +40,14 @@ A typical startup script
   };
   
   # Shut down the computer on completion or failure
-  run3( [ 'shutdown', '-h 0' ], \undef );
+  run3( [ 'shutdown', '-h', '0' ], \undef );
   
   exit(0);
 
 And a typical configuration image.conf
 
   class=PITA::Image::Manager
-  version=0.01
+  version=0.10
   support=http://10.0.2.2/
   
   [ task ]
@@ -95,7 +96,7 @@ use HTTP::Request::Common 'GET', 'PUT';
 
 use vars qw{$VERSION $NOSERVER};
 BEGIN {
-	$VERSION = '0.01';
+	$VERSION = '0.10';
 }
 
 
@@ -280,7 +281,7 @@ sub new {
 		Carp::croak("Missing option task.job_id in image.conf");
 	}
 
-	# Did we get a request 
+	# Did we get a request?
 	# Create the task object from it
 	my $task = $driver->new(
 		injector    => $self->injector,
@@ -446,7 +447,7 @@ Adam Kennedy E<lt>cpan@ali.asE<gt>, L<http://ali.as/>
 
 The Perl Image Testing Architecture (L<http://ali.as/pita/>)
 
-L<PITA>, L<PITA::Report>, L<PITA::Scheme>
+L<PITA>, L<PITA::XML>, L<PITA::Scheme>
 
 =head1 COPYRIGHT
 
