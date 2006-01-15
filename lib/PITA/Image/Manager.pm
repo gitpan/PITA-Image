@@ -96,7 +96,7 @@ use HTTP::Request::Common 'GET', 'PUT';
 
 use vars qw{$VERSION $NOSERVER};
 BEGIN {
-	$VERSION = '0.10';
+	$VERSION = '0.11';
 }
 
 
@@ -288,7 +288,7 @@ sub new {
 		workarea    => $self->workarea,
 		scheme      => $scheme,
 		path        => $path,
-		scheme_conf => $config_file,
+		request_xml => $config_file,
 		request_id  => $job_id,
 		);
 	$self->add_task( $task );

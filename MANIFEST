@@ -25,7 +25,7 @@ t/injectors/02_emptyconfig/image.conf
 t/injectors/02_emptyconfig/README
 t/injectors/03_good/image.conf
 t/injectors/03_good/PITA-Test-Dummy-Perl5-Make-1.01.tar.gz
-t/injectors/03_good/scheme.conf
+t/injectors/03_good/request.pita
 t/injectors/04_badclass/image.conf
 t/injectors/05_badversion/image.conf
 t/injectors/06_badperl5lib/image.conf
