@@ -19,10 +19,11 @@ BEGIN {
 	}
 }
 
-use Test::More tests => 50;
+use Test::More tests => 56;
 
 use Params::Util         ':ALL';
 use File::Temp           ();
+use File::Remove         ();
 use PITA::Image::Manager ();
 
 # Get a common workarea to prevent creating a ton of them
@@ -30,7 +31,11 @@ my $tempdir = File::Temp::tempdir();
 ok( -d $tempdir, 'Got workarea directory'      );
 ok( -r $tempdir, 'Readable workarea directory' );
 ok( -w $tempdir, 'Writable workarea directory' );
-
+END {
+	if ( $tempdir and -d $tempdir ) {
+		File::Remove::remove( \1, $tempdir );
+	}
+}
 
 
 
@@ -133,30 +138,50 @@ fails_with( qr/Missing \[task\] section in image.conf/,
 #####################################################################
 # Test a basic good injector
 
-my $manager = PITA::Image::Manager->new(
-	workarea => $tempdir,
-	injector => injector_ok('03_good'),
-	);
-isa_ok( $manager, 'PITA::Image::Manager' );
-is( scalar($manager->tasks), 1, 'Got one task' );
-isa_ok( ($manager->tasks)[0], 'PITA::Scheme' );
+SCOPE: {
+	my $manager = PITA::Image::Manager->new(
+		workarea => $tempdir,
+		injector => injector_ok('03_good'),
+		);
+	isa_ok( $manager, 'PITA::Image::Manager' );
+	is( $manager->cleanup, '', '->cleanup is false' );
+	is( scalar($manager->tasks), 1, 'Got one task' );
+	isa_ok( ($manager->tasks)[0], 'PITA::Scheme' );
 
-# Run the tests
-ok( $manager->run, '->run returns ok' );
-is( scalar($manager->tasks), 1, 'Got one task' );
-isa_ok( ($manager->tasks)[0], 'PITA::Scheme' );
-isa_ok( ($manager->tasks)[0]->report,  'PITA::XML::Report'  );
-isa_ok( ($manager->tasks)[0]->install, 'PITA::XML::Install' );
-is( scalar(($manager->tasks)[0]->install->commands), 3,
-	'Created all three commands as expected' );
+	# Run the tests
+	ok( $manager->run, '->run returns ok' );
+	is( scalar($manager->tasks), 1, 'Got one task' );
+	isa_ok( ($manager->tasks)[0], 'PITA::Scheme' );
+	isa_ok( ($manager->tasks)[0]->report,  'PITA::XML::Report'  );
+	isa_ok( ($manager->tasks)[0]->install, 'PITA::XML::Install' );
+	is( scalar(($manager->tasks)[0]->install->commands), 3,
+		'Created all three commands as expected' );
 
-# Dry-run report the results
-my $request = $manager->report_scheme_request( ($manager->tasks)[0] );
-isa_ok( $request, 'HTTP::Request' );
-is( $request->method, 'PUT', '->method is PUT' );
-is( $request->uri, 'http://10.0.2.2/1234', '->uri is http://10.0.2.2/1234' );
-ok( $request->content =~ /^\<\?xml/, 'Generated XML' );
-ok( length($request->content) > 20000, 'Looks long enough' );
-ok( $manager->report, '->report returns ok' );
+	# Dry-run report the results
+	my $request = $manager->report_scheme_request( ($manager->tasks)[0] );
+	isa_ok( $request, 'HTTP::Request' );
+	is( $request->method, 'PUT', '->method is PUT' );
+	is( $request->uri, 'http://10.0.2.2/1234', '->uri is http://10.0.2.2/1234' );
+	ok( $request->content =~ /^\<\?xml/, 'Generated XML' );
+	ok( length($request->content) > 20000, 'Looks long enough' );
+	ok( $manager->report, '->report returns ok' );
+}
+
+# The workarea directory should NOT be deleted
+ok( -d $tempdir, '->workarea dir is not deleted' );
+
+SCOPE: {
+	my $manager = PITA::Image::Manager->new(
+		workarea => $tempdir,
+		injector => injector_ok('03_good'),
+		cleanup  => 1,
+		);
+	isa_ok( $manager, 'PITA::Image::Manager' );
+	is( $manager->cleanup, 1, '->cleanup is true' );
+}
+
+# This time, it should be deleted
+sleep 1;
+ok( ! -d $tempdir, '->workarea is correctly deleted' );
 
 exit(0);

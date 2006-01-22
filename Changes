@@ -1,5 +1,9 @@
 Revision history for Perl distribution PITA-Image
 
+0.12 Mon 23 Jan 2006
+	- Added a cleanup flag to force cleaning up of the workarea
+	  on DESTROY when run in non-snapshot situations.
+
 0.11 Sun 15 Jan 2006
 	- Updated to handle the PITA::Scheme changeover to using
 	  PITA::XML::Request in XML instead of the Config::Tiny approach.

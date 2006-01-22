@@ -89,6 +89,7 @@ use strict;
 use Carp                  ();
 use File::Spec            ();
 use File::Which           ();
+use File::Remove          ();
 use Config::Tiny          ();
 use Params::Util          ':ALL';
 use LWP::UserAgent        ();
@@ -96,7 +97,7 @@ use HTTP::Request::Common 'GET', 'PUT';
 
 use vars qw{$VERSION $NOSERVER};
 BEGIN {
-	$VERSION = '0.11';
+	$VERSION = '0.12';
 }
 
 
@@ -144,6 +145,9 @@ Returns a new C<PITA::Image::Manager> object, or dies on error.
 sub new {
 	my $class = shift;
 	my $self  = bless { @_ }, $class;
+
+	# Cleanup param is boolean
+	$self->{cleanup} = !! $self->{cleanup};
 
 	# Check some params
 	unless ( $self->injector ) {
@@ -296,6 +300,10 @@ sub new {
 	$self;
 }
 
+sub cleanup {
+	$_[0]->{cleanup};
+}
+
 sub injector {
 	$_[0]->{injector};	
 }
@@ -425,6 +433,19 @@ sub report_scheme_uri {
 	my $path = File::Spec->catfile( $uri->path || '/', $job );
 	$uri->path( $path );
 	$uri;
+}
+
+
+
+
+
+#####################################################################
+# Support Methods
+
+sub DESTROY {
+	if ( $_[0]->{cleanup} and $_[0]->{workarea} and -d $_[0]->{workarea} ) {
+		File::Remove::remove( \1, $_[0]->{workarea} );
+	}
 }
 
 1;
