@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Check how PITA::Image::Manager responds to various config files
+# Check how PITA::Image responds to various config files
 
 use strict;
 use lib ();
@@ -19,12 +19,12 @@ BEGIN {
 	}
 }
 
-use Test::More tests => 56;
+use Test::More tests => 75;
 
-use Params::Util         ':ALL';
-use File::Temp           ();
-use File::Remove         ();
-use PITA::Image::Manager ();
+use Params::Util ':ALL';
+use File::Temp   ();
+use File::Remove ();
+use PITA::Image  ();
 
 # Get a common workarea to prevent creating a ton of them
 my $tempdir = File::Temp::tempdir();
@@ -53,14 +53,15 @@ sub fails_with {
 	my $error_like = shift;
 
 	# Create the new object
-	my $manager = undef;
-	eval {
-		$manager = PITA::Image::Manager->new( @_ );
+	my $manager = eval {
+		my $foo = PITA::Image->new( @_ );
+		$foo->prepare if $foo;
+		return $foo;
 	};
-	ok( ! defined $manager, 'Manager was not created' );
+	ok( ! defined $manager, 'PITA::Image was not created' );
 
 	SKIP: {
-		skip("Manager creation did not fail", 1) if $manager;
+		skip("PITA::Image creation did not fail", 1) if $manager;
 		like( $@, qr/$error_like/, "Error matches expected ( $error_like )" );
 	}
 }
@@ -72,11 +73,11 @@ sub fails_with {
 #####################################################################
 # Test various expected failures
 
-fails_with( 'Manager \'injector\' was not provided',
+fails_with( 'Image \'injector\' was not provided',
 	# No params
 );
 
-fails_with( 'Manager \'injector\' was not provided',
+fails_with( 'Image \'injector\' was not provided',
 	workarea => $tempdir,
 );
 
@@ -85,17 +86,17 @@ fails_with( 'Failed to find image.conf in the injector',
 	injector => injector_ok('01_noconfig'),
 );
 
-fails_with( 'Config file is incompatible with PITA::Image::Manager',
+fails_with( 'Config file is incompatible with PITA::Image',
 	workarea => $tempdir,
 	injector => injector_ok('02_emptyconfig'),
 );
 
-fails_with( 'Config file is incompatible with PITA::Image::Manager',
+fails_with( 'Config file is incompatible with PITA::Image',
 	workarea => $tempdir,
 	injector => injector_ok('04_badclass'),
 );
 
-fails_with( 'Config file is incompatible with this version of PITA::Image::Manager',
+fails_with( 'Config file is incompatible with this version of PITA::Image',
 	workarea => $tempdir,
 	injector => injector_ok('05_badversion'),
 );
@@ -122,7 +123,7 @@ fails_with( "Failed to contact SupportServer",
 
 # Below this point use ignore the support server.
 # Convert this to full mock-based testing later
-$PITA::Image::Manager::NOSERVER = $PITA::Image::Manager::NOSERVER = 1;
+$PITA::Image::NOSERVER = $PITA::Image::NOSERVER = 1;
 
 fails_with( qr/Missing \[task\] section in image.conf/,
 	workarea => $tempdir,
@@ -139,26 +140,31 @@ fails_with( qr/Missing \[task\] section in image.conf/,
 # Test a basic good injector
 
 SCOPE: {
-	my $manager = PITA::Image::Manager->new(
+	my $manager = PITA::Image->new(
 		workarea => $tempdir,
 		injector => injector_ok('03_good'),
 		);
-	isa_ok( $manager, 'PITA::Image::Manager' );
+	isa_ok( $manager, 'PITA::Image' );
 	is( $manager->cleanup, '', '->cleanup is false' );
+	is( scalar($manager->tasks), 0, 'Got one task' );
+
+	# Prepare
+	ok( $manager->prepare, '->prepare returns true' );
 	is( scalar($manager->tasks), 1, 'Got one task' );
-	isa_ok( ($manager->tasks)[0], 'PITA::Scheme' );
+	isa_ok( ($manager->tasks)[0], 'PITA::Image::Task' );
+	isa_ok( ($manager->tasks)[0], 'PITA::Image::Test' );
 
 	# Run the tests
 	ok( $manager->run, '->run returns ok' );
 	is( scalar($manager->tasks), 1, 'Got one task' );
-	isa_ok( ($manager->tasks)[0], 'PITA::Scheme' );
+	isa_ok( ($manager->tasks)[0], 'PITA::Image::Test' );
 	isa_ok( ($manager->tasks)[0]->report,  'PITA::XML::Report'  );
 	isa_ok( ($manager->tasks)[0]->install, 'PITA::XML::Install' );
 	is( scalar(($manager->tasks)[0]->install->commands), 3,
 		'Created all three commands as expected' );
 
 	# Dry-run report the results
-	my $request = $manager->report_scheme_request( ($manager->tasks)[0] );
+	my $request = $manager->report_task_request( ($manager->tasks)[0] );
 	isa_ok( $request, 'HTTP::Request' );
 	is( $request->method, 'PUT', '->method is PUT' );
 	is( $request->uri, 'http://10.0.2.2/1234', '->uri is http://10.0.2.2/1234' );
@@ -171,17 +177,67 @@ SCOPE: {
 ok( -d $tempdir, '->workarea dir is not deleted' );
 
 SCOPE: {
-	my $manager = PITA::Image::Manager->new(
+	my $manager = PITA::Image->new(
 		workarea => $tempdir,
 		injector => injector_ok('03_good'),
 		cleanup  => 1,
 		);
-	isa_ok( $manager, 'PITA::Image::Manager' );
+	isa_ok( $manager, 'PITA::Image' );
 	is( $manager->cleanup, 1, '->cleanup is true' );
 }
 
 # This time, it should be deleted
 sleep 1;
 ok( ! -d $tempdir, '->workarea is correctly deleted' );
+
+
+
+
+
+#####################################################################
+# Ping test
+
+SCOPE: {
+	my $manager = PITA::Image->new(
+		injector => injector_ok('13_ping'),
+		cleanup  => 1,
+		);
+	isa_ok( $manager, 'PITA::Image' );
+	is( scalar($manager->tasks), 0, 'Got zero task' );
+	ok( $manager->run, '->run returns ok' );
+}
+
+
+
+
+
+#####################################################################
+# Discovery test
+
+SCOPE: {
+	my $manager = PITA::Image->new(
+		injector => injector_ok('14_discover'),
+		cleanup  => 1,
+		);
+	$manager->add_platform(
+		scheme => 'perl5',
+		path   => $^X,
+		);
+	isa_ok( $manager, 'PITA::Image' );
+	is( scalar($manager->tasks), 0, 'Got one task' );
+	is( scalar($manager->platforms), 1, 'Got one platform' );
+	isa_ok( ($manager->platforms)[0], 'PITA::Image::Platform' );
+
+	# Prepare
+	ok( $manager->prepare, '->prepare returns true' );
+	is( scalar($manager->tasks), 1, 'Got one task' );
+	isa_ok( ($manager->tasks)[0], 'PITA::Image::Discover' );
+
+	# Run the tests
+	ok( $manager->run, '->run returns ok' );
+	is( scalar($manager->tasks), 1, 'Got one task' );
+	isa_ok( ($manager->tasks)[0], 'PITA::Image::Discover' );
+	isa_ok( ($manager->tasks)[0]->result, 'PITA::XML::File' );
+}
 
 exit(0);

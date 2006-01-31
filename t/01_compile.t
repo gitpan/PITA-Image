@@ -19,12 +19,15 @@ BEGIN {
 	}
 }
 
-use Test::More tests => 3;
+use Test::More tests => 6;
 
 BEGIN {
 	ok( $] > 5.005, 'Perl version is 5.005 or newer' );
-	use_ok( 'PITA::Image'          );
-	use_ok( 'PITA::Image::Manager' );
+	use_ok( 'PITA::Image'           );
+	use_ok( 'PITA::Image::Platform' );
+	use_ok( 'PITA::Image::Task'     );
+	use_ok( 'PITA::Image::Discover' );
+	use_ok( 'PITA::Image::Test'     );
 }
 
 exit(0);
