@@ -3,34 +3,33 @@ package PITA::Image::Discover;
 use strict;
 use base 'PITA::Image::Task';
 use PITA::XML    ();
-use Params::Util '_ARRAY';
+use Params::Util '_ARRAY',
+                 '_SET';
 use PITA::Scheme::Perl::Discovery ();
 
 use vars qw{$VERSION};
 BEGIN {
-	$VERSION = '0.15';
+	$VERSION = '0.20';
 }
 
 sub new {
 	my $class = shift;
 	my $self  = bless { @_ }, $class;
 
-	unless ( $self->scheme ) {
-		Carp::croak("Missing option 'task.scheme' in image.conf");
+	# Check the task params
+	unless ( $self->job_id ) {
+		Carp::croak("Task does not have a job_id");
 	}
-	unless ( $self->path ) {
-		Carp::croak("Missing options 'task.path' in image.conf");
-	}
-	unless ( _ARRAY($self->platforms) ) {
-		Carp::croak("Did not provide platforms array to Discover->new");
+	unless ( _SET($self->platforms, 'PITA::Image::Platform') ) {
+		Carp::croak("Did not provide a list of platforms");
 	}
 
 	# Create a discovery object for each platform
 	my @discoveries = ();
 	foreach my $platform ( @{$self->platforms} ) {
 		push @discoveries, PITA::Scheme::Perl::Discovery->new(
-			scheme => $self->scheme,
-			path   => $self->path,
+			scheme => $platform->scheme,
+			path   => $platform->path,
 			);
 	}
 	$self->{discoveries} = \@discoveries;
@@ -38,12 +37,8 @@ sub new {
 	$self;
 }
 
-sub scheme {
-	$_[0]->{scheme};	
-}
-
-sub path {
-	$_[0]->{path};
+sub job_id {
+	$_[0]->{job_id};
 }
 
 sub platforms {
@@ -79,8 +74,8 @@ sub run {
 		if ( $discovery->platform ) {
 			$guest->add_platform( $discovery->platform );
 		} else {
-			my $scheme = $self->scheme;
-			my $path   = $self->path;
+			my $scheme = $discovery->scheme;
+			my $path   = $discovery->path;
 			Carp::croak("Error finding platform $scheme at $path");
 		}
 	}

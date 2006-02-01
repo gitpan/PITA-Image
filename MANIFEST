@@ -22,6 +22,7 @@ META.yml
 README
 t/01_compile.t
 t/02_config.t
+t/03_practical.t
 t/99_pod.t
 t/injectors/01_noconfig/README
 t/injectors/02_emptyconfig/image.conf

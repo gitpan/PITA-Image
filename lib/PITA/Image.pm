@@ -102,7 +102,7 @@ use PITA::Image::Test     ();
 
 use vars qw{$VERSION $NOSERVER};
 BEGIN {
-	$VERSION = '0.15';
+	$VERSION = '0.20';
 }
 
 
@@ -412,8 +412,8 @@ sub report_task {
 
 sub report_task_request {
 	my ($self, $task) = @_;	
-	unless ( $task->report ) {
-		Carp::croak("No Report created to PUT");
+	unless ( $task->result ) {
+		Carp::croak("No Result Report created to PUT");
 	}
 
 	# Serialize the data for sending
@@ -448,6 +448,23 @@ sub report_task_uri {
 # Support Methods
 
 sub DESTROY {
+	# Delete our tasks and platforms in reverse order
+	### Mostly paranoia, some actual problems if we do not
+	### do it as strictly correct as this
+	if ( defined $_[0]->{tasks} ) {
+		foreach my $i ( reverse 0 .. $#{$_[0]->{tasks}} ) {
+			undef $_[0]->{tasks}->[$i];
+		}
+		delete $_[0]->{tasks};
+	}
+	if ( defined $_[0]->{platforms} ) {
+		foreach my $i ( reverse 0 .. $#{$_[0]->{platforms}} ) {
+			undef $_[0]->{platforms}->[$i];
+		}
+		delete $_[0]->{platforms};
+	}
+
+	# Now remove the workarea directory
 	if ( $_[0]->{cleanup} and $_[0]->{workarea} and -d $_[0]->{workarea} ) {
 		File::Remove::remove( \1, $_[0]->{workarea} );
 	}

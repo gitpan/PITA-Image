@@ -1,6 +1,11 @@
 Revision history for Perl distribution PITA-Image
 
-0.15 Tue 21 Jan 2006
+0.20 Thu  2 Jan 2006
+	- Fixing a number of bugs.
+	- Adding more complete testing of the Test task
+	- Synchronising version for PITA 0.20 release
+
+0.15 Tue 31 Jan 2006
 	- Fully completed auto-discovery of the Perl5 family (I think)
 	- Heavy refactoring towards the goal of multiple tasks
 

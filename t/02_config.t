@@ -19,7 +19,7 @@ BEGIN {
 	}
 }
 
-use Test::More tests => 75;
+use Test::More tests => 59;
 
 use Params::Util ':ALL';
 use File::Temp   ();
@@ -36,6 +36,7 @@ END {
 		File::Remove::remove( \1, $tempdir );
 	}
 }
+
 
 
 
@@ -189,55 +190,5 @@ SCOPE: {
 # This time, it should be deleted
 sleep 1;
 ok( ! -d $tempdir, '->workarea is correctly deleted' );
-
-
-
-
-
-#####################################################################
-# Ping test
-
-SCOPE: {
-	my $manager = PITA::Image->new(
-		injector => injector_ok('13_ping'),
-		cleanup  => 1,
-		);
-	isa_ok( $manager, 'PITA::Image' );
-	is( scalar($manager->tasks), 0, 'Got zero task' );
-	ok( $manager->run, '->run returns ok' );
-}
-
-
-
-
-
-#####################################################################
-# Discovery test
-
-SCOPE: {
-	my $manager = PITA::Image->new(
-		injector => injector_ok('14_discover'),
-		cleanup  => 1,
-		);
-	$manager->add_platform(
-		scheme => 'perl5',
-		path   => $^X,
-		);
-	isa_ok( $manager, 'PITA::Image' );
-	is( scalar($manager->tasks), 0, 'Got one task' );
-	is( scalar($manager->platforms), 1, 'Got one platform' );
-	isa_ok( ($manager->platforms)[0], 'PITA::Image::Platform' );
-
-	# Prepare
-	ok( $manager->prepare, '->prepare returns true' );
-	is( scalar($manager->tasks), 1, 'Got one task' );
-	isa_ok( ($manager->tasks)[0], 'PITA::Image::Discover' );
-
-	# Run the tests
-	ok( $manager->run, '->run returns ok' );
-	is( scalar($manager->tasks), 1, 'Got one task' );
-	isa_ok( ($manager->tasks)[0], 'PITA::Image::Discover' );
-	isa_ok( ($manager->tasks)[0]->result, 'PITA::XML::File' );
-}
 
 exit(0);

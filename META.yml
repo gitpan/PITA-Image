@@ -5,7 +5,7 @@ no_index:
     - t
 generated_by: Module::Install version 0.55
 distribution_type: module
-version: 0.15
+version: 0.20
 name: PITA-Image
 author: Adam Kennedy <cpan@ali.as>, L<http://ali.as/>
 license: perl
@@ -17,12 +17,12 @@ requires:
   Process: 0.16
   File::Spec: 0.80
   File::Which: 0.05
-  PITA::Scheme: 0.15
+  PITA::Scheme: 0.20
   Carp: 0
   perl: 5.005
   Params::Util: 0.10
   File::Temp: 0
   Config::Tiny: 2.00
-  PITA::XML: 0.19
+  PITA::XML: 0.20
   LWP: 5.69
 abstract: PITA Guest Manager for inside system images

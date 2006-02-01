@@ -8,12 +8,17 @@ use Params::Util '_POSINT',
 
 use vars qw{$VERSION};
 BEGIN {
-	$VERSION = '0.15';
+	$VERSION = '0.20';
 }
 
 sub new {
 	my $class = shift;
 	my $self  = bless { @_ }, $class;
+
+	# Got somewhere to report this to?
+	unless ( $self->job_id ) {
+		Carp::croak("Task does not have a job_id");
+	}
 
 	# Resolve the specific schema class for this test run
 	my $scheme = $self->scheme; # A convenience
@@ -62,6 +67,10 @@ sub new {
 	$self;
 }
 
+sub job_id {
+	$_[0]->{job_id};
+}
+
 sub scheme {
 	$_[0]->{scheme};
 }
@@ -72,10 +81,6 @@ sub path {
 
 sub config {
 	$_[0]->{config};
-}
-
-sub job_id {
-	$_[0]->{job_id};
 }
 
 sub driver {
@@ -114,5 +119,19 @@ sub report {
 sub install {
 	$_[0]->driver->install;
 }
+
+
+
+
+
+#####################################################################
+# Support Methods
+
+#sub DESTROY {
+#	# Clean up our driver early
+#	if ( $_[0]->{driver} ) {
+#		undef $_[0]->{driver};
+#	}
+#}
 
 1;
