@@ -99,7 +99,7 @@ SCOPE: {
 	ok( $manager->run, '->run returns ok' );
 	is( scalar($manager->tasks), 1, 'Got one task' );
 	isa_ok( ($manager->tasks)[0], 'PITA::Image::Discover' );
-	isa_ok( ($manager->tasks)[0]->result, 'PITA::XML::File' );
+	isa_ok( ($manager->tasks)[0]->result, 'PITA::XML::Storable' );
 	isa_ok( ($manager->tasks)[0]->result, 'PITA::XML::Guest' );
 
 	# Report the results
@@ -136,7 +136,7 @@ SCOPE: {
 	ok( $manager->run, '->run returns ok' );
 	is( scalar($manager->tasks), 1, 'Got one task' );
 	isa_ok( ($manager->tasks)[0], 'PITA::Image::Test' );
-	isa_ok( ($manager->tasks)[0]->result, 'PITA::XML::File' );
+	isa_ok( ($manager->tasks)[0]->result, 'PITA::XML::Storable' );
 	isa_ok( ($manager->tasks)[0]->result, 'PITA::XML::Report' );
 
 	# Report the results
