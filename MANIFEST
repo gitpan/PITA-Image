@@ -1,11 +1,8 @@
 Changes
-inc/Module/AutoInstall.pm
 inc/Module/Install.pm
-inc/Module/Install/AutoInstall.pm
 inc/Module/Install/Base.pm
 inc/Module/Install/Can.pm
 inc/Module/Install/Fetch.pm
-inc/Module/Install/Include.pm
 inc/Module/Install/Makefile.pm
 inc/Module/Install/Metadata.pm
 inc/Module/Install/Win32.pm
@@ -23,7 +20,7 @@ README
 t/01_compile.t
 t/02_config.t
 t/03_practical.t
-t/99_pod.t
+t/99_author.t
 t/injectors/01_noconfig/README
 t/injectors/02_emptyconfig/image.conf
 t/injectors/02_emptyconfig/README

@@ -1,28 +1,31 @@
-
+--- 
+abstract: PITA Guest Manager for inside system images
+author: Adam Kennedy <cpan@ali.as>, L<http://ali.as/>
+build_requires: 
+  Test::More: 0.47
+distribution_type: module
+generated_by: Module::Install version 0.65
+license: perl
+meta-spec: 
+  url: http://module-build.sourceforge.net/META-spec-v1.3.html
+  version: 1.3
+name: PITA-Image
 no_index: 
   directory: 
     - inc
     - t
-generated_by: Module::Install version 0.60
-distribution_type: module
-version: 0.29
-name: PITA-Image
-author: Adam Kennedy <cpan@ali.as>, L<http://ali.as/>
-license: perl
-build_requires: 
-  Test::More: 0.47
 requires: 
-  File::Remove: 0.21
-  URI: 0
-  Process: 0.16
-  File::Spec: 0.80
-  File::Which: 0.05
-  PITA::Scheme: 0.29
   Carp: 0
-  perl: 5.005
-  Params::Util: 0.10
-  File::Temp: 0
   Config::Tiny: 2.00
-  PITA::XML: 0.29
+  File::Remove: 0.34
+  File::Spec: 0.80
+  File::Temp: 0
+  File::Which: 0.05
   LWP: 5.69
-abstract: PITA Guest Manager for inside system images
+  PITA::Scheme: 0.29
+  PITA::XML: 0.29
+  Params::Util: 0.10
+  Process: 0.16
+  URI: 0
+  perl: 5.005
+version: 0.30
