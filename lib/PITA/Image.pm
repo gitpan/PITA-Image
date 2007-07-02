@@ -102,7 +102,7 @@ use PITA::Image::Test     ();
 
 use vars qw{$VERSION $NOSERVER};
 BEGIN {
-	$VERSION = '0.30';
+	$VERSION = '0.40';
 }
 
 
@@ -155,8 +155,8 @@ sub new {
 	$self->{platforms} = [];
 	$self->{tasks}     = [];
 
-	# Cleanup param is boolean
-	$self->{cleanup} = !! $self->{cleanup};
+	# Normalize boolean params
+	$self->{cleanup}    = !! $self->{cleanup};
 
 	# Check some params
 	unless ( $self->injector ) {
@@ -484,7 +484,7 @@ For other issues, contact the author.
 
 =head1 AUTHOR
 
-Adam Kennedy E<lt>cpan@ali.asE<gt>, L<http://ali.as/>
+Adam Kennedy E<lt>adamk@cpan.orgE<gt>, L<http://ali.as/>
 
 =head1 SEE ALSO
 
@@ -494,7 +494,7 @@ L<PITA>, L<PITA::XML>, L<PITA::Scheme>
 
 =head1 COPYRIGHT
 
-Copyright 2005 - 2006 Adam Kennedy. All rights reserved.
+Copyright 2005 - 2006 Adam Kennedy.
 
 This program is free software; you can redistribute
 it and/or modify it under the same terms as Perl itself.

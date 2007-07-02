@@ -1,10 +1,10 @@
 --- 
 abstract: PITA Guest Manager for inside system images
-author: Adam Kennedy <cpan@ali.as>, L<http://ali.as/>
+author: Adam Kennedy <adamk@cpan.org>, L<http://ali.as/>
 build_requires: 
   Test::More: 0.47
 distribution_type: module
-generated_by: Module::Install version 0.65
+generated_by: Module::Install version 0.67
 license: perl
 meta-spec: 
   url: http://module-build.sourceforge.net/META-spec-v1.3.html
@@ -22,10 +22,10 @@ requires:
   File::Temp: 0
   File::Which: 0.05
   LWP: 5.69
-  PITA::Scheme: 0.29
-  PITA::XML: 0.29
+  PITA::Scheme: 0.40
+  PITA::XML: 0.40
   Params::Util: 0.10
   Process: 0.16
   URI: 0
   perl: 5.005
-version: 0.30
+version: 0.40
