@@ -1,4 +1,7 @@
 Changes
+examples/qemu-login.bat
+examples/sysv_init_null
+examples/sysv_init_pita.pl
 inc/Module/Install.pm
 inc/Module/Install/Base.pm
 inc/Module/Install/Can.pm
@@ -20,7 +23,9 @@ README
 t/01_compile.t
 t/02_config.t
 t/03_practical.t
-t/99_author.t
+t/97_meta.t
+t/98_pod.t
+t/99_pmv.t
 t/injectors/01_noconfig/README
 t/injectors/02_emptyconfig/image.conf
 t/injectors/02_emptyconfig/README

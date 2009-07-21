@@ -5,46 +5,46 @@ SYNOPSIS
     A typical startup script
 
       #!/usr/bin/perl
-  
-      use strict;
+      
+  use strict;
       use IPC::Run3;
       use PITA::Image;
-  
-      # Wrap the main actions in an eval to catch errors
+      
+  # Wrap the main actions in an eval to catch errors
       eval {
           # Configure the image manager
           my $manager = PITA::Image->new(
               injector => '/mnt/hbd1',
               workarea => '/tmp',
-              );
+          );
           $manager->add_platform(
               scheme => 'perl5',
               path   => '', # Default system Perl
-              );
+          );
           $manager->add_platform(
               scheme => 'perl5',
               path   => '/opt/perl5-6-1/bin/perl'
-              );
-  
-          # Run the tasks
+          );
+      
+      # Run the tasks
           $manager->run;
-  
-          # Report the results
+      
+      # Report the results
           $manager->report;
       };
-  
-      # Shut down the computer on completion or failure
+      
+  # Shut down the computer on completion or failure
       run3( [ 'shutdown', '-h', '0' ], \undef );
-  
-      exit(0);
+      
+  exit(0);
 
     And a typical configuration image.conf
 
       class=PITA::Image
       version=0.10
       support=http://10.0.2.2/
-  
-      [ task ]
+      
+  [ task ]
       task=Test
       scheme=perl5.make
       path=/usr/bin/perl
@@ -74,9 +74,9 @@ Setting up a Testing Image
 METHODS
   new
       my $manager = PITA::Image->new(
-            injector => '/mnt/hdb1',
-            workarea => '/tmp',
-            );
+          injector => '/mnt/hdb1',
+          workarea => '/tmp',
+      );
 
     The "new" creates a new image manager. It takes two named parameters.
 
@@ -112,7 +112,7 @@ SEE ALSO
     PITA, PITA::XML, PITA::Scheme
 
 COPYRIGHT
-    Copyright 2005 - 2006 Adam Kennedy.
+    Copyright 2005 - 2009 Adam Kennedy.
 
     This program is free software; you can redistribute it and/or modify it
     under the same terms as Perl itself.
