@@ -28,7 +28,7 @@ requires:
   File::Temp: 0
   File::Which: 0.05
   LWP: 5.69
-  PITA::Scheme: 0.40
+  PITA::Scheme: 0.42
   PITA::XML: 0.41
   Params::Util: 0.10
   Process: 0.16
@@ -38,4 +38,4 @@ resources:
   ChangeLog: http://fisheye2.atlassian.com/changelog/cpan/trunk/PITA-Image
   license: http://dev.perl.org/licenses/
   repository: http://svn.ali.as/cpan/trunk/PITA-Image
-version: 0.41
+version: 0.42
