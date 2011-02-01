@@ -5,6 +5,7 @@ examples/sysv_init_pita.pl
 inc/Module/Install.pm
 inc/Module/Install/Base.pm
 inc/Module/Install/Can.pm
+inc/Module/Install/DSL.pm
 inc/Module/Install/Fetch.pm
 inc/Module/Install/Makefile.pm
 inc/Module/Install/Metadata.pm
@@ -23,9 +24,6 @@ README
 t/01_compile.t
 t/02_config.t
 t/03_practical.t
-t/97_meta.t
-t/98_pod.t
-t/99_pmv.t
 t/injectors/01_noconfig/README
 t/injectors/02_emptyconfig/image.conf
 t/injectors/02_emptyconfig/README
@@ -43,3 +41,6 @@ t/injectors/11_notasktask/image.conf
 t/injectors/12_badtask/image.conf
 t/injectors/13_ping/image.conf
 t/injectors/14_discover/image.conf
+xt/meta.t
+xt/pmv.t
+xt/pod.t
