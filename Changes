@@ -1,5 +1,16 @@
 Revision history for Perl distribution PITA-Image
 
+0.60 Thu 27 Oct 2011
+	- Upgrading to Module::Install::DSL 1.04
+	- Updating dependencies to fix IPC and resource
+	  management bugs.
+	- Adds proper Win32 support
+	- Converting from LWP to HTTP::Tiny
+	- Adding a shorter 5 second timeout
+
+0.50 Fri 11 Mar 2011
+	- Fixing the way we generate an error message
+
 0.43 Tue 1 Feb 2011
 	- Upgrading to Module::Install::DSL 1.00
 	- Fixing a bug on Win32

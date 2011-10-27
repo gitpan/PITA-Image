@@ -3,13 +3,13 @@ package PITA::Image::Discover;
 use 5.006;
 use strict;
 use PITA::XML                     ();
-use Params::Util                qw{ _ARRAY _SET };
+use Params::Util                  ();
 use PITA::Image::Task             ();
 use PITA::Scheme::Perl::Discovery ();
 
 use vars qw{$VERSION @ISA};
 BEGIN {
-	$VERSION = '0.43';
+	$VERSION = '0.60';
 	@ISA     = 'PITA::Image::Task';
 }
 
@@ -21,7 +21,7 @@ sub new {
 	unless ( $self->job_id ) {
 		Carp::croak("Task does not have a job_id");
 	}
-	unless ( _SET($self->platforms, 'PITA::Image::Platform') ) {
+	unless ( Params::Util::_SET($self->platforms, 'PITA::Image::Platform') ) {
 		Carp::croak("Did not provide a list of platforms");
 	}
 
@@ -29,9 +29,8 @@ sub new {
 	my @discoveries = ();
 	foreach my $platform ( @{$self->platforms} ) {
 		push @discoveries, PITA::Scheme::Perl::Discovery->new(
-			scheme => $platform->scheme,
-			path   => $platform->path,
-			);
+			path => $platform->path,
+		);
 	}
 	$self->{discoveries} = \@discoveries;
 
@@ -71,13 +70,13 @@ sub run {
 
 	# Run the discovery on each platform
 	foreach my $discovery ( @{$self->discoveries} ) {
+		require Devel::Dumpvar;
 		$discovery->delegate;
 		if ( $discovery->platform ) {
 			$guest->add_platform( $discovery->platform );
 		} else {
-			my $scheme = $discovery->scheme;
-			my $path   = $discovery->path;
-			Carp::croak("Error finding platform $scheme at $path");
+			my $path = $discovery->path;
+			Carp::croak("Error finding platform at $path");
 		}
 	}
 
